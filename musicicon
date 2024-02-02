@@ -1,0 +1,39 @@
+import requests
+import json 
+
+api_key = ""
+base_api_url = ""
+
+headers = {}
+
+
+import pandas as pd
+
+file_name = ""
+
+def read_api(appname):
+    api_url = base_api_url+appname
+    response = requests.get(api_url, headers=headers)
+    if (response.status_code==200):
+        raw_api_data = response.json()
+        page_dict = raw_api_data['paging']
+        totalcount = page_dict['metadata']['totalCount']
+        pagesize = page_dict['metadata']['pageSize']
+        totalpages = page_dict['metadata']['totalPages']
+        snapshot = page_dict['metadata']['snapshot']
+        return(appname, totalcount, pagesize, totalpages, snapshot)
+    
+
+def write_to_csv(data):
+    df = pd.DataFrame(data, columns =['appname', 'totalcount', 'pagesize', 'totalpages', 'snapshot'])
+    df.to_csv(file_name, encoding='utf-8', index=False)
+    
+    
+
+main_tabs = ['Announcement', 'Application', 'Assessment', 'Certificate', 'CertificateApplication', 'Customer', 'NewHire', 'NewHireAppointingAuthority', 'Office', 'OnboardingTask', 'Organization', 'Request', 'RequestAppointingAuthority', 'Review', 'StaffingTask', 'TimeToHire', 'Vacancy', 'VacancyAppointingAuthority', 'VacancyFlag']
+
+res = []
+for appname in main_tabs:
+    res.append(read_api(appname))
+
+write_to_csv(res)
