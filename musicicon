@@ -30,7 +30,7 @@ def write_to_csv(data):
     
     
 
-main_tabs = ['Announcement', 'Application', 'Assessment', 'Certificate', 'CertificateApplication', 'Customer', 'NewHire', 'NewHireAppointingAuthority', 'Office', 'OnboardingTask', 'Organization', 'Request', 'RequestAppointingAuthority', 'Review', 'StaffingTask', 'TimeToHire', 'Vacancy', 'VacancyAppointingAuthority', 'VacancyFlag']
+main_tabs = []
 
 res = []
 for appname in main_tabs:
