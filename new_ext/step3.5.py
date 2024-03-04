@@ -1,4 +1,3 @@
-
 import extids_map_schema as extids_schema
 
 table_dict = {
@@ -25,19 +24,65 @@ table_dict = {
 process_tables = [6,7,9,13,16,19]
 
 ext_schema_data = {
-    "Customer": ["customerAnnouncementID_schema", "customerOfficeID_schema", "customerOrganizationID_schema",   "customerRequestID_schema", "customerVacancyID_schema"],
-    "NewHire": ["newHireOfficeID_schema", "newHireRequestID_schema", "newHireOnboardingTaskID_schema"],
-    "Office": ["officeOrganizationID_schema", "officeAnnouncementID_schema", "officeApplicationID_schema", "officeCustomerID_schema", "officeNewHireID_schema", "officeVacancyID_schema"],
-    "Organization": ["organizationCustomerID_schema", "organizationOfficeID_schema"],  
-    "Request": ["requestCustomerID_schema", "requestCertificateApplicationID_schema", "requestNewHireID_schema", "requestOnboardingTaskID_schema", "requestReviewID_schema", "requestStaffingTaskID_schema", "requestVacancyID_schema"],
-    "TimeToHire": ["timeToHireAnnouncementID_schema", "timeToHireCustomerID_schema", "timeToHireOfficeID_schema", "timeToHireOrganizationID_schema", "timeToHireRequestID_schema", "timeToHireVacancyID_schema", "timeToHireNewHireID_schema"],
-    "Vacancy": ["vacancyAnnouncementID_schema", "vacancyApplicationID_schema", "vacancyAssessmentID_schema", "vacancyCertificateID_schema", "vacancyCustomerID_schema", "vacancyOfficeID_schema", "vacancyRequestID_schema", "vacancyReviewID_schema", "vacancyStaffingTaskID_schema"]
+    "Customer": [
+        {"filename": "customerAnnouncementIDs.csv", "schema": "customerAnnouncementID_schema"},
+        {"filename": "customerOfficeIDs.csv", "schema": "customerOfficeID_schema"},
+        {"filename": "customerOrganizationIDs.csv", "schema": "customerOrganizationID_schema"},
+        {"filename": "customerRequestIDs.csv", "schema": "customerRequestID_schema"},
+        {"filename": "customerVacancyIDs.csv", "schema": "customerVacancyID_schema"}
+    ],
+    "NewHire": [
+        {"filename": "OfficeIDs.csv", "schema": "newHireOfficeID_schema"},
+        {"filename": "RequestIDs.csv", "schema": "newHireRequestID_schema"},
+        {"filename": "OnboardingTaskIDs.csv", "schema": "newHireOnboardingTaskID_schema"}
+    ],
+    "Office": [
+        {"filename": "OrganizationIDs.csv", "schema": "officeOrganizationID_schema"},
+        {"filename": "AnnouncementIDs.csv", "schema": "officeAnnouncementID_schema"},
+        {"filename": "ApplicationIDs.csv", "schema": "officeApplicationID_schema"},
+        {"filename": "CustomerIDs.csv", "schema": "officeCustomerID_schema"},
+        {"filename": "NewHireIDs.csv", "schema": "officeNewHireID_schema"},
+        {"filename": "VacancyIDs.csv", "schema": "officeVacancyID_schema"}
+    ],
+    "Organization": [
+        {"filename": "CustomerIDs.csv", "schema": "organizationCustomerID_schema"},
+        {"filename": "OfficeIDs.csv", "schema": "organizationOfficeID_schema"}
+    ],
+    "Request": [
+        {"filename": "CustomerIDs.csv", "schema": "requestCustomerID_schema"},
+        {"filename": "CertificateApplicationIDs.csv", "schema": "requestCertificateApplicationID_schema"},
+        {"filename": "NewHireIDs.csv", "schema": "requestNewHireID_schema"},
+        {"filename": "OnboardingTaskIDs.csv", "schema": "requestOnboardingTaskID_schema"},
+        {"filename": "ReviewIDs.csv", "schema": "requestReviewID_schema"},
+        {"filename": "StaffingTaskIDs.csv", "schema": "requestStaffingTaskID_schema"},
+        {"filename": "VacancyIDs.csv", "schema": "requestVacancyID_schema"}
+    ],
+    "TimeToHire": [
+        {"filename": "AnnouncementIDs.csv", "schema": "timeToHireAnnouncementID_schema"},
+        {"filename": "CustomerIDs.csv", "schema": "timeToHireCustomerID_schema"},
+        {"filename": "OfficeIDs.csv", "schema": "timeToHireOfficeID_schema"},
+        {"filename": "OrganizationIDs.csv", "schema": "timeToHireOrganizationID_schema"},
+        {"filename": "RequestIDs.csv", "schema": "timeToHireRequestID_schema"},
+        {"filename": "VacancyIDs.csv", "schema": "timeToHireVacancyID_schema"},
+        {"filename": "NewHireIDs.csv", "schema": "timeToHireNewHireID_schema"}
+    ],
+    "Vacancy": [
+        {"filename": "AnnouncementIDs.csv", "schema": "vacancyAnnouncementID_schema"},
+        {"filename": "ApplicationIDs.csv", "schema": "vacancyApplicationID_schema"},
+        {"filename": "AssessmentIDs.csv", "schema": "vacancyAssessmentID_schema"},
+        {"filename": "CertificateIDs.csv", "schema": "vacancyCertificateID_schema"},
+        {"filename": "CustomerIDs.csv", "schema": "vacancyCustomerID_schema"},
+        {"filename": "OfficeIDs.csv", "schema": "vacancyOfficeID_schema"},
+        {"filename": "RequestIDs.csv", "schema": "vacancyRequestID_schema"},
+        {"filename": "ReviewIDs.csv", "schema": "vacancyReviewID_schema"},
+        {"filename": "StaffingTaskIDs.csv", "schema": "vacancyStaffingTaskID_schema"}
+    ]
 }
-
 
 for i in process_tables:
     table_name = table_dict[i]
     extid_schemas_li = ext_schema_data[table_name]
-    for sch in extid_schemas_li:
-        struct_schema = getattr(extids_schema, sch)
-        print(struct_schema)
+    for sch_key in extid_schemas_li:
+        filename = sch_key['filename']
+        struct_schema = getattr(extids_schema, sch_key['schema'])
+        execute_csv(filename,struct_schema)
