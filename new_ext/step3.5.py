@@ -79,10 +79,20 @@ ext_schema_data = {
     ]
 }
 
+def get_file_path(filename):
+    for file in available_csv_files_li:
+        if(filename in file):
+            return file
+    return None
+
 for i in process_tables:
     table_name = table_dict[i]
     extid_schemas_li = ext_schema_data[table_name]
     for sch_key in extid_schemas_li:
         filename = sch_key['filename']
-        struct_schema = getattr(extids_schema, sch_key['schema'])
-        execute_csv(filename,struct_schema)
+        act_file = get_file_path(filename)
+        if(act_file):
+            struct_schema = getattr(extids_schema, sch_key['schema'])
+            execute_csv(act_file,struct_schema)
+        else:
+            print(f"Missing the file {filename} for {table_name} ")
