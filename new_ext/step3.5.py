@@ -32,50 +32,50 @@ ext_schema_data = {
         {"filename": "customerVacancyIDs.csv", "schema": "customerVacancyID_schema"}
     ],
     "NewHire": [
-        {"filename": "OfficeIDs.csv", "schema": "newHireOfficeID_schema"},
-        {"filename": "RequestIDs.csv", "schema": "newHireRequestID_schema"},
-        {"filename": "OnboardingTaskIDs.csv", "schema": "newHireOnboardingTaskID_schema"}
+        {"filename": "NewHireOfficeIDs.csv", "schema": "newHireOfficeID_schema"},
+        {"filename": "NewHireRequestIDs.csv", "schema": "newHireRequestID_schema"},
+        {"filename": "NewHireOnboardingTaskIDs.csv", "schema": "newHireOnboardingTaskID_schema"}
     ],
     "Office": [
-        {"filename": "OrganizationIDs.csv", "schema": "officeOrganizationID_schema"},
-        {"filename": "AnnouncementIDs.csv", "schema": "officeAnnouncementID_schema"},
-        {"filename": "ApplicationIDs.csv", "schema": "officeApplicationID_schema"},
-        {"filename": "CustomerIDs.csv", "schema": "officeCustomerID_schema"},
-        {"filename": "NewHireIDs.csv", "schema": "officeNewHireID_schema"},
-        {"filename": "VacancyIDs.csv", "schema": "officeVacancyID_schema"}
+        {"filename": "OfficeOrganizationIDs.csv", "schema": "officeOrganizationID_schema"},
+        {"filename": "OfficeAnnouncementIDs.csv", "schema": "officeAnnouncementID_schema"},
+        {"filename": "OfficeApplicationIDs.csv", "schema": "officeApplicationID_schema"},
+        {"filename": "OfficeCustomerIDs.csv", "schema": "officeCustomerID_schema"},
+        {"filename": "OfficeNewHireIDs.csv", "schema": "officeNewHireID_schema"},
+        {"filename": "OfficeVacancyIDs.csv", "schema": "officeVacancyID_schema"}
     ],
     "Organization": [
-        {"filename": "CustomerIDs.csv", "schema": "organizationCustomerID_schema"},
-        {"filename": "OfficeIDs.csv", "schema": "organizationOfficeID_schema"}
+        {"filename": "OrganizationCustomerIDs.csv", "schema": "organizationCustomerID_schema"},
+        {"filename": "OrganizationOfficeIDs.csv", "schema": "organizationOfficeID_schema"}
     ],
     "Request": [
-        {"filename": "CustomerIDs.csv", "schema": "requestCustomerID_schema"},
-        {"filename": "CertificateApplicationIDs.csv", "schema": "requestCertificateApplicationID_schema"},
-        {"filename": "NewHireIDs.csv", "schema": "requestNewHireID_schema"},
-        {"filename": "OnboardingTaskIDs.csv", "schema": "requestOnboardingTaskID_schema"},
-        {"filename": "ReviewIDs.csv", "schema": "requestReviewID_schema"},
-        {"filename": "StaffingTaskIDs.csv", "schema": "requestStaffingTaskID_schema"},
-        {"filename": "VacancyIDs.csv", "schema": "requestVacancyID_schema"}
+        {"filename": "RequestCustomerIDs.csv", "schema": "requestCustomerID_schema"},
+        {"filename": "RequestCertificateApplicationIDs.csv", "schema": "requestCertificateApplicationID_schema"},
+        {"filename": "RequestNewHireIDs.csv", "schema": "requestNewHireID_schema"},
+        {"filename": "RequestOnboardingTaskIDs.csv", "schema": "requestOnboardingTaskID_schema"},
+        {"filename": "RequestReviewIDs.csv", "schema": "requestReviewID_schema"},
+        {"filename": "RequestStaffingTaskIDs.csv", "schema": "requestStaffingTaskID_schema"},
+        {"filename": "RequestVacancyIDs.csv", "schema": "requestVacancyID_schema"}
     ],
     "TimeToHire": [
-        {"filename": "AnnouncementIDs.csv", "schema": "timeToHireAnnouncementID_schema"},
-        {"filename": "CustomerIDs.csv", "schema": "timeToHireCustomerID_schema"},
-        {"filename": "OfficeIDs.csv", "schema": "timeToHireOfficeID_schema"},
-        {"filename": "OrganizationIDs.csv", "schema": "timeToHireOrganizationID_schema"},
-        {"filename": "RequestIDs.csv", "schema": "timeToHireRequestID_schema"},
-        {"filename": "VacancyIDs.csv", "schema": "timeToHireVacancyID_schema"},
-        {"filename": "NewHireIDs.csv", "schema": "timeToHireNewHireID_schema"}
+        {"filename": "TimeToHireAnnouncementIDs.csv", "schema": "timeToHireAnnouncementID_schema"},
+        {"filename": "TimeToHireCustomerIDs.csv", "schema": "timeToHireCustomerID_schema"},
+        {"filename": "TimeToHireOfficeIDs.csv", "schema": "timeToHireOfficeID_schema"},
+        {"filename": "TimeToHireOrganizationIDs.csv", "schema": "timeToHireOrganizationID_schema"},
+        {"filename": "TimeToHireRequestIDs.csv", "schema": "timeToHireRequestID_schema"},
+        {"filename": "TimeToHireVacancyIDs.csv", "schema": "timeToHireVacancyID_schema"},
+        {"filename": "TimeToHireNewHireIDs.csv", "schema": "timeToHireNewHireID_schema"}
     ],
     "Vacancy": [
-        {"filename": "AnnouncementIDs.csv", "schema": "vacancyAnnouncementID_schema"},
-        {"filename": "ApplicationIDs.csv", "schema": "vacancyApplicationID_schema"},
-        {"filename": "AssessmentIDs.csv", "schema": "vacancyAssessmentID_schema"},
-        {"filename": "CertificateIDs.csv", "schema": "vacancyCertificateID_schema"},
-        {"filename": "CustomerIDs.csv", "schema": "vacancyCustomerID_schema"},
-        {"filename": "OfficeIDs.csv", "schema": "vacancyOfficeID_schema"},
-        {"filename": "RequestIDs.csv", "schema": "vacancyRequestID_schema"},
-        {"filename": "ReviewIDs.csv", "schema": "vacancyReviewID_schema"},
-        {"filename": "StaffingTaskIDs.csv", "schema": "vacancyStaffingTaskID_schema"}
+        {"filename": "VacancyAnnouncementIDs.csv", "schema": "vacancyAnnouncementID_schema"},
+        {"filename": "VacancyApplicationIDs.csv", "schema": "vacancyApplicationID_schema"},
+        {"filename": "VacancyAssessmentIDs.csv", "schema": "vacancyAssessmentID_schema"},
+        {"filename": "VacancyCertificateIDs.csv", "schema": "vacancyCertificateID_schema"},
+        {"filename": "VacancyCustomerIDs.csv", "schema": "vacancyCustomerID_schema"},
+        {"filename": "VacancyOfficeIDs.csv", "schema": "vacancyOfficeID_schema"},
+        {"filename": "VacancyRequestIDs.csv", "schema": "vacancyRequestID_schema"},
+        {"filename": "VacancyReviewIDs.csv", "schema": "vacancyReviewID_schema"},
+        {"filename": "VacancyStaffingTaskIDs.csv", "schema": "vacancyStaffingTaskID_schema"}
     ]
 }
 
