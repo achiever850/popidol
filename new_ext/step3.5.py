@@ -76,7 +76,33 @@ ext_schema_data = {
         {"filename": "VacancyRequestIDs.csv", "schema": "vacancyRequestID_schema"},
         {"filename": "VacancyReviewIDs.csv", "schema": "vacancyReviewID_schema"},
         {"filename": "VacancyStaffingTaskIDs.csv", "schema": "vacancyStaffingTaskID_schema"}
+    ],
+
+        "Announcement": [
+        {"filename": "AnnouncementCustomerIDs.csv", "schema": "announcementCustomerID_schema"},
+        {"filename": "AnnouncementOfficeIDs.csv", "schema": "announcementOfficeID_schema"},
+        {"filename": "AnnouncementVacancyIDs.csv", "schema": "announcementVacancyID_schema"}
+    ],
+    "Assessment":[
+        {"filename": "AssessmentReviewIDs.csv", "schema": "assessmentReviewID_schema"},
+        {"filename": "AssessmentVacancyIDs.csv", "schema": "assessmentVacancyID_schema"}
+],
+    "Certificate":[
+        {"filename": "CertificateVacancyIDs.csv", "schema": "certificateVacancyID_schema"},
+        {"filename": "CertificateCertificateApplicationIDs.csv", "schema": "certificateCertificateApplicationID_schema"},
+        {"filename": "CertificateReviewIDs.csv", "schema": "certificateReviewID_schema"}
+    ],
+    "Review":[
+        {"filename": "ReviewAssessmentIDs.csv", "schema": "reviewAssessmentID_schema"},
+        {"filename": "ReviewCertificateIDs.csv", "schema": "reviewCertificateID_schema"},
+        {"filename": "ReviewRequestIDs.csv", "schema": "reviewRequestID_schema"},
+        {"filename": "ReviewVacancyIDs.csv", "schema": "reviewVacancyID_schema"}
+    ],
+    "StaffingTask":[
+        {"filename": "StaffingtaskRequestIDs.csv", "schema": "staffingtaskRequestID_schema"},
+        {"filename": "StaffingtaskVacancyIDs.csv", "schema": "staffingtaskVacancyID_schema"}
     ]
+    
 }
 
 def get_file_path(filename):
