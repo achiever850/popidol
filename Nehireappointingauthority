@@ -1,0 +1,181 @@
+import requests
+from awsglue.dynamicframe import DynamicFrame
+from pyspark.sql import SparkSession
+from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType, LongType, DoubleType, BooleanType
+from pyspark.sql.functions import to_timestamp, regexp_replace, when, concat, col, lit, udf
+
+# Initialize Spark Session
+spark = SparkSession.builder.appName("api-to-df").getOrCreate()
+
+# API and Redshift Configuration
+base_api_url = ""  # Add your base API URL here
+api_key = ""  # Add your API key here
+headers = {"Api-Key": api_key}
+
+my_conn_options = {
+    "dbtable": "redshift-table-name",  # Replace with your Redshift table name
+    "database": "redshift-database-name"  # Replace with your Redshift database name
+}
+
+@udf(returnType=StringType())
+def extract_id_from_links(links, rel_value):
+    if links is None:
+        print("Links are None, returning None.")
+        return None
+    for link in links:
+        if link.get('rel') == rel_value:
+            try:
+                val = link['href'].split('/')[4]
+                res = val.split('|')[-1]
+                return res
+            except Exception as e:
+                print(f"Error processing link: {link['href']}, Exception: {e}")
+    return None
+
+class ReadAPI:
+    def __init__(self, app_name, table_schema, timestamp_col_li):
+        self.app_name = app_name
+        self.headers = headers
+        self.table_schema = table_schema
+        self.timestamp_columns = timestamp_col_li
+        self.api_url = f"{base_api_url}/api/{app_name}"
+        self.df = None
+        self.next_api_url = None
+
+    def fetch_api_data(self, api_url):
+        try:
+            response = requests.get(api_url, headers=self.headers)
+            if response.status_code == 200:
+                return response.json()
+            else:
+                print(f"API request failed with status code {response.status_code}")
+        except Exception as e:
+            print(f"Exception occurred during API request: {e}")
+        return None
+
+    def convert_raw_list_to_df(self, raw_api_data_list):
+        if raw_api_data_list:
+            return spark.createDataFrame(raw_api_data_list, schema=self.table_schema)
+        else:
+            print("No data found to convert to DataFrame.")
+            return None
+
+    def handle_pagination(self, raw_api_data):
+        if 'paging' in raw_api_data:
+            page_dict = raw_api_data['paging']
+            self.totalcount = page_dict['metadata']['totalCount']
+            self.pagesize = page_dict['metadata']['pageSize']
+            self.currentpage = page_dict['metadata']['currentPage']
+            self.totalpages = page_dict['metadata']['totalPages']
+            self.snapshot = page_dict['metadata']['snapshot']
+            self.previous = page_dict['previous']
+            self.next_api_url = page_dict.get('next')
+        else:
+            print("No pagination information found.")
+
+    def extract_links_rel_list(self, raw_api_data):
+        if 'data' in raw_api_data and raw_api_data['data']:
+            link_li = raw_api_data['data'][0].get('_links', None)
+            if link_li is not None:
+                self.links_rel_list = [ele['rel'] for ele in link_li if ele['rel'] != 'self']
+            else:
+                print("No '_links' found in data.")
+        else:
+            print("Data is empty or malformed in API response.")
+
+    def concat_df(self, new_df):
+        if new_df is not None:
+            if self.df is None:
+                self.df = new_df
+            else:
+                self.df = self.df.union(new_df)
+            print("Concatenating with new df")
+        else:
+            print("No new DataFrame to concatenate.")
+
+    def process_data_for_all_pages(self):
+        while self.next_api_url:
+            print(f"Fetching data from: {self.next_api_url}")
+            raw_api_data = self.fetch_api_data(base_api_url + self.next_api_url)
+            if raw_api_data:
+                self.handle_pagination(raw_api_data)
+                raw_api_data_list = raw_api_data['data']
+                new_df = self.convert_raw_list_to_df(raw_api_data_list)
+                self.concat_df(new_df)
+            else:
+                print("No more data to fetch or an error occurred.")
+                break
+
+    def handle_links(self):
+        if self.df is not None:
+            print("::: the rel list :::")
+            print(self.links_rel_list)
+            for rel_value in self.links_rel_list:
+                print(f"Extracting for: {rel_value}")
+                self.df = self.df.withColumn(rel_value, extract_id_from_links(col("_links"), lit(rel_value)))
+            print("Converting json to text object")
+            self.df = self.df.withColumn('_links', col('_links').cast(StringType()))
+        else:
+            print("DataFrame is None, cannot handle links.")
+
+    def handle_timestamp_columns(self):
+        if self.df is not None:
+            for column in self.timestamp_columns:
+                self.df = self.df.withColumn(column, when(~col(column).contains('.'), concat(col(column), lit('.000'))).otherwise(col(column)))
+                self.df = self.df.withColumn(column, to_timestamp(col(column), "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS"))
+        else:
+            print("DataFrame is None, cannot handle timestamp columns.")
+
+    def execute(self):
+        raw_api_data = self.fetch_api_data(self.api_url)
+        if raw_api_data:
+            self.handle_pagination(raw_api_data)
+            raw_api_data_list = raw_api_data['data']
+            self.df = self.convert_raw_list_to_df(raw_api_data_list)
+            if self.totalpages > 1:
+                self.process_data_for_all_pages()
+
+            self.extract_links_rel_list(raw_api_data)
+            self.handle_links()
+            self.handle_timestamp_columns()
+        else:
+            print("No data retrieved from API, cannot execute further.")
+        return self.df
+
+
+def write_to_redshift(glueContext, input_dynamic_frame):
+    if input_dynamic_frame.count() > 0:
+        glueContext.write_dynamic_frame.from_jdbc_conf(
+            frame=input_dynamic_frame,
+            catalog_connection="dc-connection-name",
+            connection_options=my_conn_options,
+            redshift_tmp_dir=""
+        )
+    else:
+        print("DynamicFrame is empty, not writing to Redshift.")
+
+
+# Define your schema and timestamp columns
+NewHireAppointingAuthority_schema = StructType([
+    StructField("tenantId", IntegerType(), True),
+    StructField("tagId", LongType(), True),
+    StructField("appointingAuthority", StringType(), True),
+    StructField("appointingAuthorityTagLevel", StringType(), True),
+    StructField("dwLastModifiedDateTime", TimestampType(), True)
+])
+
+NewHireAppointingAuthority_timestamp_columns = ["dwLastModifiedDateTime"]
+
+# Application name
+appname = "NewHireAppointingAuthority"
+
+# Read API and process data
+api_reader = ReadAPI(appname, NewHireAppointingAuthority_schema, NewHireAppointingAuthority_timestamp_columns)
+df = api_reader.execute()
+
+# Convert DataFrame to DynamicFrame and write to Redshift
+if df is not None:
+    input_dynamic_frame = DynamicFrame.fromDF(df, glueContext, "input_dynamic_frame")
+    write_to_redshift(glueContext, input_dynamic_frame)
+else:
+    print("DataFrame is None, not converting to DynamicFrame.")
